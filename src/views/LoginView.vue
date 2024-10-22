@@ -1,76 +1,54 @@
 <script setup>
-import { ref } from 'vue'
+import AppLayout from '@/components/layout/AppLayout.vue'
+import { useDisplay } from 'vuetify'
 
-const theme = ref('light')
-
-function onClick() {
-  theme.value = theme.value === 'light' ? 'dark' : 'light'
-}
+const { mobile } = useDisplay()
 </script>
 
 <template>
-  <v-responsive class="border rounded">
-    <v-app :theme="theme">
-      <v-app-bar class="px-3">
-        <v-spacer></v-spacer>
+  <AppLayout>
+    <template #content>
+      <v-row>
+        <v-col cols="12" md="6" class="mx-auto pt-16">
+          <v-card class="mx-auto" subtitle="Login Form" elevation="24">
+            <v-card-title>
+              <v-img class="mx-auto" src="images/logo2-favicon.png"> </v-img>
+              <v-divider class="my-5"></v-divider>
+            </v-card-title>
 
-        <v-btn
-          :prepend-icon="
-            theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'
-          "
-          :text="theme === 'light' ? 'Dark Mode' : 'Light Mode'"
-          slim
-          @click="onClick"
-        ></v-btn>
-      </v-app-bar>
+            <v-card-text class="bg-surface-light pt-4">
+              <v-form fast-fail @submit.prevent>
+                <v-text-field label="Email" variant="outlined"></v-text-field>
 
-      <v-main>
-        <v-container>
-          <v-row>
-            <v-col cols="12" md="6" class="mx-auto pt-16">
-              <v-card
-                class="mx-auto"
-                prepend-icon="mdi-login"
-                subtitle="Login"
-                elevation="24"
-              >
-                <template v-slot:title>
-                  <span class="font-weight-black">Taste Table</span>
-                </template>
+                <v-text-field
+                  label="Password"
+                  type="password"
+                  variant="outlined"
+                >
+                </v-text-field>
 
-                <v-card-text class="bg-surface-light pt-4">
-                  <v-form fast-fail @submit.prevent>
-                    <v-text-field
-                      label="Email"
-                      variant="outlined"
-                    ></v-text-field>
+                <v-btn
+                  class="mt-2"
+                  type="submit"
+                  block
+                  style="background-color: #982b1c"
+                  prepend-icon="mdi-login"
+                  >Login</v-btn
+                >
+              </v-form>
 
-                    <v-text-field
-                      label="Password"
-                      type="password"
-                      variant="outlined"
-                    >
-                    </v-text-field>
+              <v-divider class="my-5"></v-divider>
 
-                    <v-btn class="mt-2" type="submit" block>Submit</v-btn>
-                  </v-form>
-
-                  <v-divider class="my-5"></v-divider>
-
-                  <h5 class="text-center">
-                    Don't have an account?
-                    <router-link class="text-primary" to="/register"
-                      >Click here to Register</router-link
-                    >
-                  </h5>
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-main>
-
-      <v-footer border app>2024 - Taste Table</v-footer>
-    </v-app>
-  </v-responsive>
+              <h5 class="text-center">
+                Don't have an account?
+                <router-link class="text-primary" to="/register"
+                  >Click here to Register</router-link
+                >
+              </h5>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+    </template>
+  </AppLayout>
 </template>
