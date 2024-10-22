@@ -5,6 +5,7 @@ import {
   passwordValidator,
   confirmedValidator,
 } from '@/utils/validators'
+import AlertNotification from '@/components/common/AlertNotification.vue'
 import { supabase, formActionDefault } from '@/utils/supabase.js'
 import { ref } from 'vue'
 
@@ -16,15 +17,41 @@ const formDataDefault = {
   password_confirmation: '',
 }
 
-const formData = ref(formDataDefault)
-const formAction = ref(formActionDefault)
+const formData = ref({
+  ...formDataDefault,
+})
+const formAction = ref({
+  ...formActionDefault,
+})
 
-const ifPasswordVisible = ref(false)
-const ifPasswordConfirmVisible = ref(false)
+const isPasswordVisible = ref(false)
+const isPasswordConfirmVisible = ref(false)
 const refVForm = ref()
 
-const onSubmit = () => {
-  // alert(formData.value.email)
+const onSubmit = async () => {
+  formAction.value = { ...formActionDefault, formProcess: true }
+
+  const { data, error } = await supabase.auth.signUp({
+    email: formData.value.email,
+    password: formData.value.password,
+    options: {
+      data: {
+        firstname: formData.value.firstname,
+        lastname: formData.value.lastname,
+      },
+    },
+  })
+
+  if (error) {
+    formAction.value.formErrorMessage = error.message
+    formAction.value.formStatus = error.status
+  } else if (data) {
+    formAction.value.formSuccessMessage = 'Successfully Registered Account!'
+    refVForm.value?.reset() // Make sure your form component has a reset method or manually reset formData
+    formData.value = { ...formDataDefault }
+  }
+
+  formAction.value.formProcess = false
 }
 
 const onFormSubmit = () => {
@@ -35,55 +62,77 @@ const onFormSubmit = () => {
 </script>
 
 <template>
-  <v-alert></v-alert>
+  <AlertNotification
+    :form-success-message="formAction.formSuccessMessage"
+    :form-error-message="formAction.formErrorMessage"
+  ></AlertNotification>
 
-  <v-form ref="refVForm" @submit.prevent="onSubmit">
-    <v-text-field
-      v-model="formData.firstname"
-      :rules="[requiredValidator]"
-      placeholder="Firstname"
-      variant="outlined"
-    ></v-text-field>
+  <v-form class="mt-5" ref="refVForm" @submit.prevent="onFormSubmit">
+    <v-row>
+      <v-col cols="12" md="6">
+        <v-text-field
+          v-model="formData.firstname"
+          :rules="[requiredValidator]"
+          placeholder="Firstname"
+          variant="outlined"
+        ></v-text-field>
+      </v-col>
 
-    <v-text-field
-      v-model="formData.lastname"
-      :rules="[requiredValidator]"
-      placeholder="Lastname"
-      variant="outlined"
-    ></v-text-field>
+      <v-col cols="12" md="6">
+        <v-text-field
+          v-model="formData.lastname"
+          :rules="[requiredValidator]"
+          placeholder="Lastname"
+          variant="outlined"
+        ></v-text-field>
+      </v-col>
 
-    <v-text-field
-      v-model="formData.email"
-      placeholder="Email"
-      prepend-inner-icon="mdi-email-outline"
-      :rules="[requiredValidator, emailValidator]"
-      variant="outlined"
-    ></v-text-field>
+      <v-col cols="12" md="6">
+        <v-text-field
+          v-model="formData.email"
+          placeholder="Email"
+          prepend-inner-icon="mdi-email-outline"
+          :rules="[requiredValidator, emailValidator]"
+          variant="outlined"
+        ></v-text-field>
+      </v-col>
 
-    <v-text-field
-      v-model="formData.password"
-      :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
-      :type="visible ? 'text' : 'password'"
-      placeholder="Password"
-      prepend-inner-icon="mdi-lock-outline"
-      :rules="[requiredValidator, passwordValidator]"
-      variant="outlined"
-      @click:append-inner="visible = !visible"
-    ></v-text-field>
+      <v-col cols="12" md="6">
+        <v-text-field
+          v-model="formData.password"
+          :append-inner-icon="isPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+          :type="isPasswordVisible ? 'text' : 'password'"
+          placeholder="Password"
+          prepend-inner-icon="mdi-lock-outline"
+          :rules="[requiredValidator, passwordValidator]"
+          variant="outlined"
+          @click:append-inner="isPasswordVisible = !isPasswordVisible"
+        ></v-text-field>
+      </v-col>
 
-    <v-text-field
-      v-model="formData.password_confirmation"
-      :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
-      :type="visible ? 'text' : 'password'"
-      placeholder="Password confirmation"
-      prepend-inner-icon="mdi-lock-outline"
-      :rules="[
-        requiredValidator,
-        confirmedValidator(formData.password_confirmation, formData.password),
-      ]"
-      variant="outlined"
-      @click:append-inner="visible = !visible"
-    ></v-text-field>
+      <v-col cols="12" md="6">
+        <v-text-field
+          v-model="formData.password_confirmation"
+          :append-inner-icon="
+            isPasswordConfirmVisible ? 'mdi-eye-off' : 'mdi-eye'
+          "
+          :type="isPasswordConfirmVisible ? 'text' : 'password'"
+          placeholder="Password confirmation"
+          prepend-inner-icon="mdi-lock-outline"
+          :rules="[
+            requiredValidator,
+            confirmedValidator(
+              formData.password_confirmation,
+              formData.password,
+            ),
+          ]"
+          variant="outlined"
+          @click:append-inner="
+            isPasswordConfirmVisible = !isPasswordConfirmVisible
+          "
+        ></v-text-field>
+      </v-col>
+    </v-row>
 
     <v-btn
       class="mt-2"
@@ -93,7 +142,7 @@ const onFormSubmit = () => {
       prepend-icon="mdi-account-plus"
       :disabled="formAction.formProcess"
       :loading="formAction.formProcess"
-      >Register</v-btn
-    >
+      >Register
+    </v-btn>
   </v-form>
 </template>
