@@ -1,4 +1,6 @@
 <script setup>
+import AlertNotification from '@/components/common/AlertNotification.vue'
+import { formActionDefault, supabase } from '@/utils/supabase'
 import { requiredValidator, emailValidator } from '@/utils/validators'
 import { ref } from 'vue'
 
@@ -10,10 +12,31 @@ const formDataDefault = {
   password: '',
 }
 
-const formData = ref(formDataDefault)
+const formData = ref({
+  ...formDataDefault,
+})
+const formAction = ref({
+  ...formActionDefault,
+})
 
-const onSubmit = () => {
-  // alert(formData.value.email)
+const onSubmit = async () => {
+  formAction.value = { ...formActionDefault, formProcess: true }
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: formData.value.email,
+    password: formData.value.password,
+  })
+
+  if (error) {
+    formAction.value.formErrorMessage = error.message
+    formAction.value.formStatus = error.status
+  } else if (data) {
+    formAction.value.formSuccessMessage = 'Successfully Logged Account!'
+  }
+
+  refVForm.value?.reset()
+
+  formAction.value.formProcess = false
 }
 
 const onFormSubmit = () => {
@@ -24,6 +47,11 @@ const onFormSubmit = () => {
 </script>
 
 <template>
+  <AlertNotification
+    :form-success-message="formAction.formSuccessMessage"
+    :form-error-message="formAction.formErrorMessage"
+  ></AlertNotification>
+
   <v-form ref="refVForm" @submit.prevent="onFormSubmit">
     <v-text-field
       v-model="formData.email"
@@ -50,7 +78,10 @@ const onFormSubmit = () => {
       block
       style="background-color: #d72323"
       prepend-icon="mdi-login"
-      >Login</v-btn
-    >
+      :disabled="formAction.formProcess"
+      :loading="formAction.formProcess"
+      :block
+      >Login
+    </v-btn>
   </v-form>
 </template>
