@@ -9,7 +9,7 @@
       class="mt-2"
       type="submit"
       block
-      style="background-color: #982b1c"
+      style="background-color: #d72323"
       prepend-icon="mdi-login"
       >Login</v-btn
     >
