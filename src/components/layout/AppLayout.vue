@@ -40,7 +40,7 @@ function onClick() {
         border
         app
       >
-        Copyright © 2024 - Tasty Table | All rights reserved.
+        Copyright © 2024 - Tasty Table | All Rights Reserved.
       </v-footer>
     </v-app>
   </v-responsive>
