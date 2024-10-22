@@ -9,7 +9,7 @@ export default {
 <template>
   <v-form fast-fail @submit.prevent>
     <v-text-field
-      label="Email"
+      placeholder="Email"
       prepend-inner-icon="mdi-email-outline"
       variant="outlined"
     ></v-text-field>

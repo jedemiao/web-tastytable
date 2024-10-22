@@ -8,12 +8,12 @@ export default {
 
 <template>
   <v-form fast-fail @submit.prevent>
-    <v-text-field label="Firstname" variant="outlined"></v-text-field>
+    <v-text-field placeholder="Firstname" variant="outlined"></v-text-field>
 
-    <v-text-field label="Lastname" variant="outlined"></v-text-field>
+    <v-text-field placeholder="Lastname" variant="outlined"></v-text-field>
 
     <v-text-field
-      label="Email"
+      placeholder="Email"
       prepend-inner-icon="mdi-email-outline"
       variant="outlined"
     ></v-text-field>
@@ -21,7 +21,7 @@ export default {
     <v-text-field
       :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
       :type="visible ? 'text' : 'password'"
-      placeholder="Enter your password"
+      placeholder="Password"
       prepend-inner-icon="mdi-lock-outline"
       variant="outlined"
       @click:append-inner="visible = !visible"
