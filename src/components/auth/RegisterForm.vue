@@ -87,7 +87,7 @@ const onFormSubmit = () => {
         ></v-text-field>
       </v-col>
 
-      <v-col cols="12" md="6">
+      <v-col cols="12">
         <v-text-field
           v-model="formData.email"
           placeholder="Email"
