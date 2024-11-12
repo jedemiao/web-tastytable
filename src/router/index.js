@@ -18,7 +18,7 @@ const router = createRouter({
     },
     // System Pages
     {
-      path: '/system/dashboard',
+      path: '/dashboard',
       name: 'dashboard',
       component: DashboardView,
     },
