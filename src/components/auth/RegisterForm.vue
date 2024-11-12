@@ -8,6 +8,9 @@ import {
 import AlertNotification from '@/components/common/AlertNotification.vue'
 import { supabase, formActionDefault } from '@/utils/supabase.js'
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const formDataDefault = {
   firstname: '',
@@ -47,9 +50,10 @@ const onSubmit = async () => {
     formAction.value.formStatus = error.status
   } else if (data) {
     formAction.value.formSuccessMessage = 'Successfully Registered Account!'
-    refVForm.value?.reset() // Make sure your form component has a reset method or manually reset formData
-    formData.value = { ...formDataDefault }
+
+    router.replace('/dashboard/')
   }
+  refVForm.value?.reset()
 
   formAction.value.formProcess = false
 }
