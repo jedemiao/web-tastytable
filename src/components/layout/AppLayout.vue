@@ -1,7 +1,40 @@
 <script setup>
-import { ref } from 'vue'
+import { isAuthenticated } from '@/utils/supabase'
+import ProfileHeader from './ProfileHeader.vue'
+import { onMounted, ref } from 'vue'
+import { useDisplay } from 'vuetify'
 
-const theme = ref(localStorage.getItem('theme') ?? 'light')
+const props = defineProps(['isWithAppBarNavIcon'])
+
+const emit = defineEmits(['isDrawerVisible'])
+
+// Utilize pre-defined vue functions
+const { xs, sm, mobile } = useDisplay()
+
+// Load Variables
+const isLoggedIn = ref(false)
+const isMobileLogged = ref(false)
+const isDesktop = ref(false)
+const theme = ref(localStorage.getItem('theme') || 'light')
+
+//  Toggle Theme
+const onToggleTheme = () => {
+  theme.value = theme.value === 'light' ? 'dark' : 'light'
+  localStorage.setItem('theme', theme.value)
+}
+
+// Get Authentication status from supabase
+const getLoggedStatus = async () => {
+  isLoggedIn.value = await authStore.isAuthenticated()
+
+  isMobileLogged.value = mobile.value && isLoggedIn.value
+  isDesktop.value = !mobile.value && (isLoggedIn.value || !isLoggedIn.value)
+}
+
+// Load Functions during component rendering
+onMounted(() => {
+  getLoggedStatus()
+})
 
 function onClick() {
   theme.value = theme.value === 'light' ? 'dark' : 'light'
@@ -25,12 +58,14 @@ function onClick() {
           slim
           @click="onClick"
         ></v-btn>
+
+        <ProfileHeader v-if="isLoggedIn"></ProfileHeader>
       </v-app-bar>
 
+      <slot name="navigation"></slot>
+
       <v-main>
-        <v-container>
-          <slot name="content"></slot>
-        </v-container>
+        <slot name="content"></slot>
       </v-main>
 
       <v-footer
