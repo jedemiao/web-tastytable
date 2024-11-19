@@ -32,6 +32,8 @@ const onSubmit = async () => {
     formAction.value.formStatus = error.status
   } else if (data) {
     formAction.value.formSuccessMessage = 'Successfully Logged Account!'
+
+    router.replace('/dashboard')
   }
 
   refVForm.value?.reset()
