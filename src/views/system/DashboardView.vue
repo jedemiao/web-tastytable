@@ -1,22 +1,19 @@
 <script setup>
 import AppLayout from '@/components/layout/AppLayout.vue'
 import SideNavigation from '@/components/layout/SideNavigation.vue'
+import RecipeGrid from '@/components/layout/RecipeGrid.vue'
 import { ref } from 'vue'
 
 const isDrawerVisible = ref(true)
 </script>
 
 <template>
-  <AppLayout
-    :is-with-app-bar-nav-icon="true"
-    @is-drawer-visible="isDrawerVisible = !isDrawerVisible"
-  >
+  <AppLayout>
     <template #navigation>
-      <SideNavigation :is-drawer-visible="isDrawerVisible"></SideNavigation>
+      <p>Navigation Placeholder</p>
     </template>
-
     <template #content>
-      <v-container> </v-container>
+      <h1>Dashboard Test</h1>
     </template>
   </AppLayout>
 </template>
