@@ -9,9 +9,7 @@ const isDrawerVisible = ref(true)
 
 <template>
   <AppLayout>
-    <template #navigation>
-      <SideNavigation />
-    </template>
+    <template #navigation> </template>
 
     <template #content>
       <h1>Dashboard Test</h1>
