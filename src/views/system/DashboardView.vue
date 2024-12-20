@@ -1,28 +1,29 @@
 <script setup>
-import AppLayout from '@/components/layout/AppLayout.vue';
-import SideNavigation from '@/components/layout/SideNavigation.vue';
-import { ref } from 'vue';
+import AppLayout from '@/components/layout/AppLayout.vue'
+import SideNavigation from '@/components/layout/SideNavigation.vue'
+import RecipeGrid from '@/components/layout/RecipeGrid.vue'
+import { ref } from 'vue'
 
-const isDrawerVisible = ref(true);
-const postContent = ref('');
-const postImage = ref(null);
-const posts = ref([]);
+const isDrawerVisible = ref(true)
+const postContent = ref('')
+const postImage = ref(null)
+const posts = ref([])
 
-// Placeholder for user's name
-const currentUser = 'Knicko Cruda'; // Replace with actual user data if available
+// Placeholder for the current user's name
+const currentUser = 'John Doe' // Replace this with actual user data if available
 
 // Handles post submission
 const handlePost = () => {
   if (postContent.value || postImage.value) {
     posts.value.push({
-      user: currentUser, // Add user name to the post
+      user: currentUser,
       content: postContent.value,
       image: postImage.value ? URL.createObjectURL(postImage.value) : null,
-    });
-    postContent.value = '';
-    postImage.value = null;
+    })
+    postContent.value = ''
+    postImage.value = null
   }
-};
+}
 </script>
 
 <template>
@@ -35,7 +36,6 @@ const handlePost = () => {
     </template>
 
     <template #content>
-      <!-- Dashboard Content -->
       <v-container>
         <v-row>
           <v-col cols="12">
@@ -91,6 +91,11 @@ const handlePost = () => {
                 />
               </v-card-text>
             </v-card>
+          </v-col>
+
+          <!-- Recipe Grid Section -->
+          <v-col cols="12">
+            <RecipeGrid />
           </v-col>
         </v-row>
       </v-container>

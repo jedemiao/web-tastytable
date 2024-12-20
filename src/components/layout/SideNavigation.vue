@@ -7,6 +7,7 @@ const isDrawerVisible = ref(props.isDrawerVisible)
 const editableMenuItems = ref([
   { title: 'Dashboard', icon: 'mdi-view-dashboard', to: '/dashboard' },
   { title: 'Account Settings', icon: 'mdi-account', to: '/account/settings' },
+  { title: 'Recipes', icon: 'mdi-food', to: '/recipes' }
 ])
 </script>
 
