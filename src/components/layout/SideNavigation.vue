@@ -1,26 +1,58 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
-const props = defineProps(['isDrawerVisible'])
+const props = defineProps(['isDrawerVisible', 'isCollapsed'])
+const emit = defineEmits(['toggleCollapse', 'logout'])
+
 const isDrawerVisible = ref(props.isDrawerVisible)
+const isCollapsed = ref(props.isCollapsed)
 
-const editableMenuItems = ref([
+watch(
+  () => props.isDrawerVisible,
+  (newVal) => {
+    isDrawerVisible.value = newVal
+  }
+)
+
+watch(
+  () => props.isCollapsed,
+  (newVal) => {
+    isCollapsed.value = newVal
+  }
+)
+
+const menuItems = ref([
   { title: 'Dashboard', icon: 'mdi-view-dashboard', to: '/dashboard' },
-  { title: 'Account Settings', icon: 'mdi-account', to: '/account/settings' },
-  { title: 'Recipes', icon: 'mdi-food', to: '/recipes' }
+  { title: 'Profile', icon: 'mdi-account', to: '/profile' },
 ])
 </script>
 
 <template>
-  <v-navigation-drawer v-model="isDrawerVisible" app>
-    <v-list>
+  <v-navigation-drawer
+    v-model="isDrawerVisible"
+    app
+    :width="isCollapsed ? 56 : 256"
+  >
+    <!-- Collapse/Expand Toggle Button -->
+    <v-list-item @click="$emit('toggleCollapse')" class="d-flex justify-center">
+    </v-list-item>
+
+    <!-- Navigation Items -->
+    <v-list dense :class="{ 'text-center': isCollapsed }">
       <v-list-item
-        v-for="(item, index) in editableMenuItems"
+        v-for="(item, index) in menuItems"
         :key="index"
         :prepend-icon="item.icon"
-        :title="item.title"
+        :title="!isCollapsed ? item.title : ''"
         :to="item.to"
       />
+      <!-- Logout Button -->
+      <v-list-item @click="$emit('logout')" :class="{ 'text-center': isCollapsed }">
+        <v-btn icon>
+          <v-icon>mdi-logout</v-icon>
+        </v-btn>
+        <span v-if="!isCollapsed">Logout</span>
+      </v-list-item>
     </v-list>
   </v-navigation-drawer>
 </template>
